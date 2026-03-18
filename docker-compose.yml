@@ -1,0 +1,6 @@
+services:
+  inventoryhold.webapi:
+    image: ${DOCKER_REGISTRY-}inventoryholdwebapi
+    build:
+      context: .
+      dockerfile: InventoryHold.WebApi/Dockerfile
