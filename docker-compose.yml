@@ -2,21 +2,42 @@ version: '3.8'
 
 services:
   api:
-    build: ./src/InventoryHold.WebApi
+    build:
+      context: .
+      dockerfile: src/InventoryHold.WebApi/Dockerfile
+    container_name: inventory-api
     ports:
       - "5000:80"
     depends_on:
       - mongo
       - redis
       - rabbitmq
+    environment:
+      - Mongo__ConnectionString=mongodb://mongo:27017
+      - Mongo__Database=InventoryDb
+      - Redis__Connection=redis:6379
+      - RabbitMQ__Host=rabbitmq
 
   mongo:
-    image: mongo
+    image: mongo:6
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
 
   redis:
-    image: redis
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
 
   rabbitmq:
     image: rabbitmq:3-management
+    container_name: rabbitmq
     ports:
+      - "5672:5672"
       - "15672:15672"
+
+volumes:
+  mongo_data:
