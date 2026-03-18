@@ -1,6 +1,22 @@
+version: '3.8'
+
 services:
-  inventoryhold.webapi:
-    image: ${DOCKER_REGISTRY-}inventoryholdwebapi
-    build:
-      context: .
-      dockerfile: InventoryHold.WebApi/Dockerfile
+  api:
+    build: ./src/InventoryHold.WebApi
+    ports:
+      - "5000:80"
+    depends_on:
+      - mongo
+      - redis
+      - rabbitmq
+
+  mongo:
+    image: mongo
+
+  redis:
+    image: redis
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"
